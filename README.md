@@ -23,3 +23,5 @@ Contributions are welcome for:
 - portable packaging
 - PyInstaller support
 - native Windows .exe packaging
+# I didn't know exactly what I was doing!
+Everything was done using Perplexity (to understand what to do and in what order), Windows Notepad, msys2, and hope.
