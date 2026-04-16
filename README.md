@@ -1,13 +1,25 @@
-# CatgirlDownloader
-A GTK4 application that downloads images of catgirl based on https://nekos.moe
-![](http://nyarchlinux.moe/assets/img/catgirldownloader-screenshots.png)
+# CatgirlDownloader for Windows
 
-## Building
-1. `meson setup <build_dir> [--prefix <prefix>]`
-> Prefix is `/usr/local` by default
-2. `meson compile -C <build_dir>`
-3. `meson install -C <build_dir> [--destdir <dest_dir>]`
-> Package is installed globally by default, or in `<dest_dir>` if `--destdir` is specified (path are relative to `<build_dir>` )
+Experimental Windows port of NyarchLinux/CatgirlDownloader.
 
-## Packaging
-Make sure you have `nfpm` and `sh` installed, then run `./package.sh`.
+## Status
+This fork runs on Windows using MSYS2 UCRT64 with GTK4/libadwaita.
+
+It is not a native standalone .exe yet.
+
+## Run on Windows
+1. Install MSYS2
+2. Install the required UCRT64 packages
+3. Double-click `run-catgirldownloader-windows.bat`
+
+## Notes
+This fork currently uses Windows-specific adjustments for:
+- Python module naming conflicts
+- loading .ui files from disk
+- loading app icons from local icon paths
+
+## Help wanted
+Contributions are welcome for:
+- portable packaging
+- PyInstaller support
+- native Windows .exe packaging
