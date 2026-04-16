@@ -1,8 +1,18 @@
+import os
 from gi.repository import Gtk, Adw
 from .preferences import UserPreferences
-from .types import NSFWOption
+from .app_types import NSFWOption
 
-@Gtk.Template(resource_path='/moe/nyarchlinux/catgirldownloader/../data/ui/preferences.ui')
+PREFERENCES_UI_FILE = os.path.abspath(os.path.join(
+    os.path.dirname(__file__),
+    '..',
+    'data',
+    'ui',
+    'preferences.ui'
+))
+
+@Gtk.Template(filename=PREFERENCES_UI_FILE)
+
 class PreferencesWindow(Adw.PreferencesWindow):
     __gtype_name__ = 'PreferencesWindow'
 

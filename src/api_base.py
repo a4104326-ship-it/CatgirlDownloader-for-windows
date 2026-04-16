@@ -1,7 +1,7 @@
 from abc import ABC, abstractmethod
 from typing import Any, Optional
 import requests
-from .types import NSFWOption
+from .app_types import NSFWOption
 
 class BaseDownloaderAPI(ABC):
     def __init__(self) -> None:

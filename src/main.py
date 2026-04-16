@@ -18,6 +18,7 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 
 import sys
+import os
 import gi
 
 gi.require_version('Gtk', '4.0')
@@ -42,12 +43,23 @@ class CatgirldownloaderApplication(Adw.Application):
     def on_reload(self, widget, _):
         self.window.async_reloadimage()
 
+    def on_reload(self, widget, _):
+        self.window.async_reloadimage()
+
     def do_activate(self):
         """Called when the application is activated.
 
         We raise the application's main window, creating it if
         necessary.
         """
+        icon_theme = Gtk.IconTheme.get_for_display(Gdk.Display.get_default())
+        icon_theme.add_search_path(os.path.abspath(os.path.join(
+            os.path.dirname(__file__),
+            '..',
+            'data',
+            'icons'
+        )))
+
         win = self.props.active_window
         if not win:
             win = CatgirldownloaderWindow(application=self)
@@ -57,13 +69,15 @@ class CatgirldownloaderApplication(Adw.Application):
 
     def on_about_action(self, widget, _):
         """Callback for the app.about action."""
-        about = Adw.AboutWindow(transient_for=self.props.active_window,
-                                application_name='Catgirl Downloader',
-                                application_icon='moe.nyarchlinux.catgirldownloader',
-                                developer_name='Nyarch Linux developers team',
-                                version='0.5',
-                                developers=['SilverOS'],
-                                copyright='© 2026 SilverOS')
+        about = Adw.AboutWindow(
+            transient_for=self.props.active_window,
+            application_name='Catgirl Downloader',
+            application_icon='moe.nyarchlinux.catgirldownloader',
+            developer_name='Nyarch Linux developers team',
+            version='0.5',
+            developers=['SilverOS'],
+            copyright='© 2026 SilverOS'
+        )
         about.present()
 
     def on_art_about_action(self, widget, _):
@@ -109,3 +123,6 @@ def main(version):
     """The application's entry point."""
     app = CatgirldownloaderApplication()
     return app.run(sys.argv)
+
+if __name__ == "__main__":
+    raise SystemExit(main(sys.argv))

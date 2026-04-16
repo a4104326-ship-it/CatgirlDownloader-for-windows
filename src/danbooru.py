@@ -4,7 +4,7 @@ import time
 import base64
 from typing import Optional, Any
 
-from .types import NSFWOption
+from .app_types import NSFWOption
 from .api_base import BaseDownloaderAPI
 
 # TODO: Surely, there must be a better way to encode these. I don't think listing the tags explicitly would be a good idea. --PCBoy

@@ -16,10 +16,17 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 # SPDX-License-Identifier: GPL-3.0-or-later
-
+import os
 import threading
 import requests
 from gi.repository import Gtk, Adw, GdkPixbuf, GLib, Gio, GObject
+
+WINDOW_UI_FILE = os.path.join(
+    os.path.dirname(os.path.dirname(__file__)),
+    'data',
+    'ui',
+    'window.ui'
+)
 
 from .catgirl import CatgirlDownloaderAPI
 from .waifu import WaifuDownloaderAPI
@@ -75,7 +82,8 @@ class SourceItem(GObject.Object):
         self.api = api
         self.icon = icon
 
-@Gtk.Template(resource_path='/moe/nyarchlinux/catgirldownloader/../data/ui/window.ui')
+@Gtk.Template(filename=WINDOW_UI_FILE)
+
 class CatgirldownloaderWindow(Adw.ApplicationWindow):
     __gtype_name__ = 'CatgirldownloaderWindow'
 

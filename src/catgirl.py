@@ -2,7 +2,7 @@ import requests
 import json
 from typing import Optional
 
-from .types import NSFWOption
+from .app_types import NSFWOption
 from .api_base import BaseDownloaderAPI
 
 class CatgirlDownloaderAPI(BaseDownloaderAPI):
