@@ -10,6 +10,6 @@ https://github.com/a4104326-ship-it/CatgirlDownloader-for-windows/releases
 
 ## Usage
 
-- Download the `.exe` file.
-
+- Download the `.zip` file.
+- Extract
 - Run `CatgirlDownloader.exe`.
