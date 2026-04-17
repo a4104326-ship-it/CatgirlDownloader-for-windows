@@ -6,7 +6,7 @@ Windows port of NyarchLinux/CatgirlDownloader.
 
 The compiled version for Windows is available in Releases:
 
-https://github.com/s4104326-ship-it/CatgirlDownloader-for-windows/releases
+https://github.com/a4104326-ship-it/CatgirlDownloader-for-windows/releases
 
 ## Usage
 
