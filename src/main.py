@@ -19,7 +19,25 @@
 
 import sys
 import os
+
+if getattr(sys, "frozen", False) and hasattr(sys, "_MEIPASS"):
+    base = sys._MEIPASS
+
+    gi_typelib = os.path.join(base, "lib", "girepository-1.0")
+    schemas = os.path.join(base, "share", "glib-2.0", "schemas")
+    icons = os.path.join(base, "data", "icons")
+
+    os.environ["GI_TYPELIB_PATH"] = gi_typelib
+    os.environ["GSETTINGS_SCHEMA_DIR"] = schemas
+
 import gi
+
+def resource_path(*parts):
+    if getattr(sys, "frozen", False) and hasattr(sys, "_MEIPASS"):
+        base = sys._MEIPASS
+    else:
+        base = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
+    return os.path.join(base, *parts)
 
 gi.require_version('Gtk', '4.0')
 gi.require_version('Adw', '1')
@@ -53,12 +71,8 @@ class CatgirldownloaderApplication(Adw.Application):
         necessary.
         """
         icon_theme = Gtk.IconTheme.get_for_display(Gdk.Display.get_default())
-        icon_theme.add_search_path(os.path.abspath(os.path.join(
-            os.path.dirname(__file__),
-            '..',
-            'data',
-            'icons'
-        )))
+        icon_theme.add_search_path(resource_path('data', 'icons'
+        ))
 
         win = self.props.active_window
         if not win:
@@ -97,11 +111,10 @@ class CatgirldownloaderApplication(Adw.Application):
                 about.present()
 
     def on_preferences_action(self, widget, _):
-        """Callback for the app.preferences action."""
-        window = PreferencesWindow(self.window)
-        window.set_transient_for(self.window)
-        window.set_modal(True)
-        window.present()
+     """Callback for the app.preferences action."""
+     win = self.props.active_window or self.window
+     window = PreferencesWindow(transient_for=win, modal=True)
+     window.present()
 
     def create_action(self, name, callback, shortcuts=None):
         """Add an application action.

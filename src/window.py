@@ -17,16 +17,19 @@
 #
 # SPDX-License-Identifier: GPL-3.0-or-later
 import os
+import sys
 import threading
 import requests
 from gi.repository import Gtk, Adw, GdkPixbuf, GLib, Gio, GObject
 
-WINDOW_UI_FILE = os.path.join(
-    os.path.dirname(os.path.dirname(__file__)),
-    'data',
-    'ui',
-    'window.ui'
-)
+def resource_path(*parts):
+    if getattr(sys, "frozen", False) and hasattr(sys, "_MEIPASS"):
+        base = sys._MEIPASS
+    else:
+        base = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
+    return os.path.join(base, *parts)
+
+WINDOW_UI_FILE = resource_path('data', 'ui', 'window.ui')
 
 from .catgirl import CatgirlDownloaderAPI
 from .waifu import WaifuDownloaderAPI
@@ -82,17 +85,10 @@ class SourceItem(GObject.Object):
         self.api = api
         self.icon = icon
 
-@Gtk.Template(filename=WINDOW_UI_FILE)
+
 
 class CatgirldownloaderWindow(Adw.ApplicationWindow):
     __gtype_name__ = 'CatgirldownloaderWindow'
-
-    refresh_button = Gtk.Template.Child("refresh_button")
-    spinner = Gtk.Template.Child("spinner")
-    image = Gtk.Template.Child("image")
-    save_button = Gtk.Template.Child("savebutton")
-    auto_reload_switch = Gtk.Template.Child("auto_reload_switch")
-    source_selector = Gtk.Template.Child("source_selector")
 
     AVAILABLE_SOURCES = {
         "catgirl": {
@@ -117,15 +113,25 @@ class CatgirldownloaderWindow(Adw.ApplicationWindow):
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
+        self.set_default_size(400, 500)
+
+        builder = Gtk.Builder.new_from_file(WINDOW_UI_FILE)
+
+        self.refresh_button = builder.get_object("refresh_button")
+        self.spinner = builder.get_object("spinner")
+        self.image = builder.get_object("image")
+        self.save_button = builder.get_object("savebutton")
+        self.auto_reload_switch = builder.get_object("auto_reload_switch")
+        self.source_selector = builder.get_object("source_selector")
+
+        root = builder.get_object("root_box")
+        self.set_content(root)
+
         self.settings = UserPreferences()
 
         self.downloaders = {}
         self.source_store = Gio.ListStore(item_type=SourceItem)
-        
         saved_source = self.settings.get_preference("source")
-        default_index = 0
-        found_source = False
-
         for i, (key, value) in enumerate(self.AVAILABLE_SOURCES.items()):
             api = value["class"](settings=self.settings)
             self.downloaders[key] = api
@@ -134,27 +140,23 @@ class CatgirldownloaderWindow(Adw.ApplicationWindow):
             if key == saved_source:
                 default_index = i
                 found_source = True
-        
+
         if not found_source and self.source_store.get_n_items() > 0:
             default_index = 0
-
+        default_index = 0
+        found_source = False
         self.source_selector.set_model(self.source_store)
-        
-        factory = Gtk.SignalListItemFactory()
-        factory.connect("setup", self.setup_source_item)
-        factory.connect("bind", self.bind_source_item)
-        self.source_selector.set_factory(factory)
-        
-        # Configure list factory for the dropdown list to use the complex layout
-        self.source_selector.set_list_factory(factory)
-        
-        # Configure a simple factory for the selected item display (button content)
-        # We just want the name of the source here
+
+        list_factory = Gtk.SignalListItemFactory()
+        list_factory.connect("setup", self.setup_source_item)
+        list_factory.connect("bind", self.bind_source_item)
+        self.source_selector.set_list_factory(list_factory)
+
         button_factory = Gtk.SignalListItemFactory()
         button_factory.connect("setup", self.setup_source_button_item)
         button_factory.connect("bind", self.bind_source_button_item)
         self.source_selector.set_factory(button_factory)
-        
+
         self.source_selector.set_selected(default_index)
         self.source_selector.connect("notify::selected-item", self.on_source_changed)
 
