@@ -132,6 +132,9 @@ class CatgirldownloaderWindow(Adw.ApplicationWindow):
         self.downloaders = {}
         self.source_store = Gio.ListStore(item_type=SourceItem)
         saved_source = self.settings.get_preference("source")
+        default_index = 0
+        found_source = False
+        
         for i, (key, value) in enumerate(self.AVAILABLE_SOURCES.items()):
             api = value["class"](settings=self.settings)
             self.downloaders[key] = api
@@ -143,8 +146,7 @@ class CatgirldownloaderWindow(Adw.ApplicationWindow):
 
         if not found_source and self.source_store.get_n_items() > 0:
             default_index = 0
-        default_index = 0
-        found_source = False
+        
         self.source_selector.set_model(self.source_store)
 
         list_factory = Gtk.SignalListItemFactory()
